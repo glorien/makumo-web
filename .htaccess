@@ -1,0 +1,23 @@
+# Verweigere direkten Zugriff auf sensible Verzeichnisse
+<IfModule mod_authz_core.c>
+    <DirectoryMatch "/(config|cache|includes|scripts)/">
+        Require all denied
+    </DirectoryMatch>
+</IfModule>
+
+# PHP-Fehler nicht im Browser anzeigen
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# Verweigere Zugriff auf .example-Dateien
+<FilesMatch "\.example$">
+    Require all denied
+</FilesMatch>
+
+# Kein Directory Listing
+Options -Indexes
+
+# Zeichensatz
+AddDefaultCharset UTF-8
