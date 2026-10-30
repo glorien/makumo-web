@@ -1,9 +1,6 @@
 # Verweigere direkten Zugriff auf sensible Verzeichnisse
-<IfModule mod_authz_core.c>
-    <DirectoryMatch "/(config|cache|includes|scripts)/">
-        Require all denied
-    </DirectoryMatch>
-</IfModule>
+# (<DirectoryMatch> ist in .htaccess nicht erlaubt, daher mod_alias)
+RedirectMatch 404 ^/(config|cache|includes|scripts|logs)(/|$)
 
 # PHP-Fehler nicht im Browser anzeigen
 <IfModule mod_php.c>
