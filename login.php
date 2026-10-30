@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 render_head('Anmelden');
 ?>
-<main class="flex-1 flex flex-col items-center justify-center px-4 py-16">
+<main class="flex-1 flex flex-col items-center justify-center px-4 py-6 sm:py-16">
 
     <div class="w-full max-w-sm">
 
-        <div class="flex flex-col items-center mb-8 text-center">
-            <img src="/assets/logo.svg" alt="" class="w-24 h-auto drop-shadow-lg mb-5">
+        <div class="flex flex-col items-center mb-6 sm:mb-8 text-center">
+            <img src="/assets/logo.svg" alt="" class="w-20 sm:w-24 h-auto drop-shadow-lg mb-4 sm:mb-5">
             <h1 class="font-headline text-4xl font-light tracking-[-0.01em] text-on-surface">
                 Makumo <span class="bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>
             </h1>
@@ -107,4 +107,4 @@ render_head('Anmelden');
         </div>
     </div>
 </main>
-<?php render_footer(); ?>
+<?php render_footer(false); ?>

@@ -4,6 +4,12 @@ declare(strict_types=1);
 // Material-Symbols-Icons, die die Seiten verwenden (alphabetisch, sonst lehnt Google Fonts ab)
 const ICON_NAMES = 'android,arrow_back,check_circle,download,error,history,install_mobile,inventory_2,lock,logout,mail,settings,smartphone,tablet_android,verified,wifi';
 
+// Hängt das Änderungsdatum an, damit Browser nach einem Deploy nicht das alte CSS aus dem Cache nehmen
+function asset_url(string $path): string {
+    $mtime = @filemtime(__DIR__ . '/..' . $path);
+    return $mtime ? "$path?v=$mtime" : $path;
+}
+
 function render_head(string $title = 'Makumo HEMS'): void {
     $full_title = $title === 'Makumo HEMS' ? $title : "$title — Makumo HEMS";
     ?>
@@ -21,10 +27,10 @@ function render_head(string $title = 'Makumo HEMS'): void {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=<?= ICON_NAMES ?>&display=block" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/tailwind.css">
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="<?= asset_url('/assets/tailwind.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('/assets/style.css') ?>">
 </head>
-<body class="bg-background text-on-surface font-sans min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<body class="bg-background text-on-surface font-sans flex flex-col overflow-x-hidden selection:bg-primary selection:text-on-primary">
     <div class="ambient-glow top-0 left-1/4 w-[600px] h-[600px] bg-primary/10 blur-[140px]"></div>
     <div class="ambient-glow top-1/3 right-10 w-[500px] h-[500px] bg-tertiary/10 blur-[160px]"></div>
     <div class="ambient-glow bottom-10 left-1/3 w-[700px] h-[700px] bg-surface-container-high/40 blur-[180px]"></div>
@@ -39,7 +45,9 @@ function render_nav(): void {
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
             <a href="/downloads.php" class="flex items-center gap-3 min-w-0">
                 <img src="/assets/logo.svg" alt="" class="w-10 h-auto drop-shadow-md">
-                <span class="font-headline text-lg font-bold tracking-wider uppercase text-on-surface whitespace-nowrap">Makumo HEMS</span>
+                <span class="font-headline text-lg font-light tracking-wider uppercase text-on-surface whitespace-nowrap">
+                    Makumo <span class="font-normal bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>
+                </span>
             </a>
             <div class="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span class="hidden sm:block font-label text-xs text-on-surface-variant truncate"><?= htmlspecialchars($user['email']) ?></span>
@@ -58,7 +66,9 @@ function render_nav(): void {
     <?php
 }
 
-function render_footer(): void {
+// $show_footer = false: nur die schließenden Tags (Login-Seite, damit sie auf einen Handy-Bildschirm passt)
+function render_footer(bool $show_footer = true): void {
+    if ($show_footer):
     ?>
     <footer class="mt-auto border-t border-outline-variant/30 bg-surface-container-lowest/60">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
@@ -72,6 +82,7 @@ function render_footer(): void {
             </div>
         </div>
     </footer>
+    <?php endif; ?>
 </body>
 </html>
     <?php

@@ -26,6 +26,9 @@
 }
 
 body {
+    /* Sichtbare Höhe: vh zählt auf Handys die Adressleiste mit, dvh nicht */
+    min-height: 100vh;
+    min-height: 100dvh;
     background-color: #190047;
     -webkit-font-smoothing: antialiased;
 }
