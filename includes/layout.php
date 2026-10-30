@@ -53,10 +53,13 @@ function render_nav(): void {
             </div>
             <div class="flex items-center gap-4">
                 <span class="text-sm text-gray-400 font-mono"><?= htmlspecialchars($user['email']) ?></span>
-                <a href="/logout.php"
-                   class="text-sm text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-md hover:bg-white/10">
-                    Abmelden
-                </a>
+                <form method="POST" action="/logout.php">
+                    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                    <button type="submit"
+                            class="text-sm text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-md hover:bg-white/10">
+                        Abmelden
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
