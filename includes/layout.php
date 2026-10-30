@@ -10,28 +10,11 @@ function render_head(string $title = 'Makumo HEMS'): void {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($full_title) ?></title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/tailwind.css">
     <link rel="stylesheet" href="/assets/style.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        display: ['Space Grotesk', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        emerald: { 500: '#10B981' },
-                    },
-                }
-            }
-        }
-    </script>
 </head>
 <body class="bg-[#0a0a0a] text-gray-100 font-sans min-h-screen">
     <?php
