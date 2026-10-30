@@ -6,7 +6,8 @@ require_once __DIR__ . '/includes/github.php';
 
 require_login();
 
-$releases = fetch_releases();
+$result   = fetch_releases();
+$releases = $result['releases'];
 
 render_head('Downloads');
 render_nav();
@@ -19,7 +20,12 @@ render_nav();
         <p class="text-gray-400 mt-2 text-sm">Aktuelle Releases der Makumo HEMS Android-App</p>
     </div>
 
-    <?php if (empty($releases)): ?>
+    <?php if (empty($releases) && $result['error']): ?>
+        <div class="glass-card rounded-2xl p-12 text-center">
+            <p class="text-gray-400 text-sm">Releases konnten nicht geladen werden. Bitte später erneut versuchen.</p>
+        </div>
+
+    <?php elseif (empty($releases)): ?>
         <div class="glass-card rounded-2xl p-12 text-center">
             <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-4">
                 <svg class="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,8 +70,7 @@ render_nav();
                         <div class="flex flex-wrap gap-2">
                             <?php foreach ($release['assets'] as $asset): ?>
                                 <a
-                                    href="<?= htmlspecialchars($asset['download_url']) ?>"
-                                    download
+                                    href="/download.php?id=<?= (int) $asset['id'] ?>"
                                     class="flex items-center gap-2 px-4 py-2 rounded-xl
                                            <?= $i === 0 ? 'bg-emerald-500 hover:bg-emerald-400 text-black' : 'bg-white/10 hover:bg-white/15 text-white' ?>
                                            font-display font-medium text-sm transition-colors"
@@ -75,7 +80,11 @@ render_nav();
                                               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                     </svg>
                                     <?= htmlspecialchars($asset['name']) ?>
-                                    <span class="font-mono text-xs opacity-60"><?= htmlspecialchars(format_bytes($asset['size'])) ?></span>
+                                    <span class="font-mono text-xs opacity-60">
+                                        <?= htmlspecialchars(format_bytes($asset['size'])) ?>
+                                        &nbsp;·&nbsp;
+                                        <?= number_format($asset['download_count'], 0, ',', '.') ?> Downloads
+                                    </span>
                                 </a>
                             <?php endforeach; ?>
                         </div>

@@ -65,3 +65,68 @@ function logout(): void {
     $_SESSION = [];
     session_destroy();
 }
+
+function csrf_token(): string {
+    start_session();
+    if (empty($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf'];
+}
+
+function verify_csrf(): bool {
+    start_session();
+    $token = $_POST['csrf'] ?? '';
+    return is_string($token)
+        && !empty($_SESSION['csrf'])
+        && hash_equals($_SESSION['csrf'], $token);
+}
+
+// Login-Sperre: max. LOGIN_MAX_ATTEMPTS Fehlversuche pro IP in LOGIN_WINDOW Sekunden
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_WINDOW       = 900; // 15 minutes
+
+function login_attempts_file(): string {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    return __DIR__ . '/../cache/login_attempts/' . hash('sha256', $ip) . '.json';
+}
+
+function read_login_attempts(): array {
+    $file = login_attempts_file();
+    if (!file_exists($file)) {
+        return ['count' => 0, 'first' => time()];
+    }
+
+    $data = json_decode((string) file_get_contents($file), true);
+    if (!is_array($data) || time() - ($data['first'] ?? 0) >= LOGIN_WINDOW) {
+        return ['count' => 0, 'first' => time()];
+    }
+    return $data;
+}
+
+// Verbleibende Sperrzeit in Sekunden, 0 wenn nicht gesperrt
+function login_lockout_remaining(): int {
+    $data = read_login_attempts();
+    if ($data['count'] < LOGIN_MAX_ATTEMPTS) {
+        return 0;
+    }
+    return max(0, $data['first'] + LOGIN_WINDOW - time());
+}
+
+function register_failed_login(): void {
+    $data = read_login_attempts();
+    $data['count']++;
+
+    $file = login_attempts_file();
+    if (!is_dir(dirname($file))) {
+        mkdir(dirname($file), 0750, true);
+    }
+    file_put_contents($file, json_encode($data), LOCK_EX);
+}
+
+function clear_failed_logins(): void {
+    $file = login_attempts_file();
+    if (file_exists($file)) {
+        unlink($file);
+    }
+}

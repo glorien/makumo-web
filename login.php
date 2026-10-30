@@ -16,11 +16,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($email === '' || $password === '') {
+    $lockout  = login_lockout_remaining();
+
+    if (!verify_csrf()) {
+        $error = 'Die Sitzung ist abgelaufen. Bitte erneut versuchen.';
+    } elseif ($lockout > 0) {
+        $error = 'Zu viele Anmeldeversuche. Bitte in ' . (int) ceil($lockout / 60) . ' Minuten erneut versuchen.';
+    } elseif ($email === '' || $password === '') {
         $error = 'Bitte E-Mail und Passwort eingeben.';
     } elseif (!attempt_login($email, $password)) {
+        register_failed_login();
         $error = 'Ungültige Anmeldedaten.';
     } else {
+        clear_failed_logins();
         header('Location: /downloads.php');
         exit;
     }
@@ -51,6 +59,7 @@ render_head('Anmelden');
             <?php endif; ?>
 
             <form method="POST" action="/login.php" novalidate>
+                <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                 <div class="mb-5">
                     <label for="email" class="block text-sm font-medium text-gray-300 mb-2">E-Mail</label>
                     <input

@@ -23,6 +23,10 @@ jobs:
             **/.github/**
             **/config/**
             **/cache/**
+            **/logs/**
             **/scripts/**
             **/.DS_Store
+            tailwind.config.js
+            README.md
+            assets/tailwind.input.css
             **/*.log
