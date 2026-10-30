@@ -1,5 +1,6 @@
 config/env.php
 config/users.php
 cache/
+logs/
 *.log
 .DS_Store
