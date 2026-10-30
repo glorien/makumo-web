@@ -7,10 +7,10 @@ A small PHP portal with login where signed-in users can download the Android APK
 - **Login** uses sessions and bcrypt password hashes. Users are defined in `config/users.php`; there is no database.
 - **Login protection:** CSRF tokens on login and logout (logout is POST only). After 5 failed attempts from one IP, login is blocked for 15 minutes (`cache/login_attempts/`).
 - **Releases** are fetched from the GitHub API (`/repos/{owner}/{repo}/releases`). Only published releases (no drafts) with at least one `.apk` asset are shown, along with the first 5 lines of the changelog and the GitHub download count.
-- **Cache:** The API response is stored in `cache/releases-v2.json` for 5 minutes. If the API fails, the expired cache is used instead.
+- **Cache:** The API response is stored in `cache/releases-v3.json` for 5 minutes. If the API fails, the expired cache is used instead.
 - **Downloads** go through `download.php`, which works with private repositories: it checks the login, accepts only assets from the release list, requests a short-lived signed URL from GitHub and redirects the browser there. The token never leaves the server and APK traffic does not pass through the web space.
 - **Download log:** Every download is appended to `logs/downloads.log` (tab-separated: time, user email, tag, file name, IP).
-- **UI:** Tailwind (prebuilt `assets/tailwind.css`), dark theme, German language.
+- **UI:** Design system "Luminous Flux" from the app repository (violet canvas, amber for the server app, cyan for the client app), Tailwind (prebuilt `assets/tailwind.css`), Material Symbols icons (Google Fonts), German language. Text uses the app's "Outfit" type theme: the same static Outfit cuts (Light, Regular, Medium) are self-hosted in `assets/fonts/`, and the Tailwind weight scale is mapped like the app (`bold`/`semibold` → 500, `medium` → 400). Assets whose file name contains `server` or `client` get the matching app card.
 
 ## Structure
 
@@ -25,6 +25,8 @@ A small PHP portal with login where signed-in users can download the Android APK
 | `includes/layout.php` | HTML head, navigation, footer |
 | `assets/tailwind.css` | Prebuilt Tailwind CSS (generated, do not edit) |
 | `assets/style.css` | Additional styles |
+| `assets/fonts/outfit-*.ttf` | Outfit font, copied from the app repository's `ui-shared/src/main/res/font/` (SIL Open Font License 1.1) |
+| `assets/logo*.svg` | Kangaroo logos (brand, server, client), copied from the app repository's `docs/assets/` |
 | `tailwind.config.js`, `assets/tailwind.input.css` | Tailwind build input |
 | `config/*.php.example` | Configuration templates |
 | `scripts/create-user.php` | Generates password hashes (CLI only) |

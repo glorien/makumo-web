@@ -11,10 +11,11 @@ function render_download_error(int $status, string $message): void {
     render_head('Download');
     render_nav();
     ?>
-<main class="max-w-5xl mx-auto px-6 py-12">
-    <div class="glass-card rounded-2xl p-12 text-center">
-        <p class="text-gray-400 text-sm"><?= htmlspecialchars($message) ?></p>
-        <a href="/downloads.php" class="inline-block mt-6 text-sm text-emerald-400 hover:text-emerald-300">
+<main class="w-full max-w-xl mx-auto px-4 sm:px-6 py-16">
+    <?php render_notice('error', $message, 'error'); ?>
+    <div class="text-center mt-6">
+        <a href="/downloads.php" class="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-lg font-label text-xs text-primary hover:bg-surface-container-high/60 transition-colors">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
             Zurück zur Übersicht
         </a>
     </div>

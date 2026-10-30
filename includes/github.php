@@ -64,7 +64,7 @@ function fetch_releases(): array {
     }
 
     $cache_dir  = __DIR__ . '/../cache';
-    $cache_file = $cache_dir . '/releases-v2.json';
+    $cache_file = $cache_dir . '/releases-v3.json';
     $cache_ttl  = 300; // 5 minutes
 
     $cached = null;
@@ -100,6 +100,7 @@ function fetch_releases(): array {
                     'name'           => $asset['name'],
                     'size'           => $asset['size'],
                     'download_count' => $asset['download_count'],
+                    'digest'         => $asset['digest'] ?? null, // z. B. "sha256:…"
                 ];
             }
         }

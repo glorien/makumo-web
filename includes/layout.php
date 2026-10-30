@@ -1,22 +1,33 @@
 <?php
 declare(strict_types=1);
 
+// Material-Symbols-Icons, die die Seiten verwenden (alphabetisch, sonst lehnt Google Fonts ab)
+const ICON_NAMES = 'android,arrow_back,check_circle,download,error,history,install_mobile,inventory_2,lock,logout,mail,settings,smartphone,tablet_android,verified,wifi';
+
 function render_head(string $title = 'Makumo HEMS'): void {
     $full_title = $title === 'Makumo HEMS' ? $title : "$title — Makumo HEMS";
     ?>
 <!DOCTYPE html>
-<html lang="de" class="dark">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#13003a">
     <title><?= htmlspecialchars($full_title) ?></title>
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="preload" href="/assets/fonts/outfit-light.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="/assets/fonts/outfit-regular.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=<?= ICON_NAMES ?>&display=block" rel="stylesheet">
     <link rel="stylesheet" href="/assets/tailwind.css">
     <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body class="bg-[#0a0a0a] text-gray-100 font-sans min-h-screen">
+<body class="bg-background text-on-surface font-sans min-h-screen flex flex-col overflow-x-hidden selection:bg-primary selection:text-on-primary">
+    <div class="ambient-glow top-0 left-1/4 w-[600px] h-[600px] bg-primary/10 blur-[140px]"></div>
+    <div class="ambient-glow top-1/3 right-10 w-[500px] h-[500px] bg-tertiary/10 blur-[160px]"></div>
+    <div class="ambient-glow bottom-10 left-1/3 w-[700px] h-[700px] bg-surface-container-high/40 blur-[180px]"></div>
     <?php
 }
 
@@ -24,37 +35,59 @@ function render_nav(): void {
     $user = current_user();
     if (!$user) return;
     ?>
-    <nav class="border-b border-white/10 bg-white/5 backdrop-blur-sm">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                </div>
-                <span class="font-display font-semibold text-white tracking-tight">Makumo HEMS</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="text-sm text-gray-400 font-mono"><?= htmlspecialchars($user['email']) ?></span>
+    <header class="sticky top-0 z-50 bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <a href="/downloads.php" class="flex items-center gap-3 min-w-0">
+                <img src="/assets/logo.svg" alt="" class="w-10 h-auto drop-shadow-md">
+                <span class="font-headline text-lg font-bold tracking-wider uppercase text-on-surface whitespace-nowrap">Makumo HEMS</span>
+            </a>
+            <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+                <span class="hidden sm:block font-label text-xs text-on-surface-variant truncate"><?= htmlspecialchars($user['email']) ?></span>
                 <form method="POST" action="/logout.php">
                     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                     <button type="submit"
-                            class="text-sm text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-md hover:bg-white/10">
-                        Abmelden
+                            class="inline-flex items-center gap-2 px-3 py-2 min-h-[44px] rounded-lg bg-surface-container-high/60 border border-outline-variant/40
+                                   text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest font-label text-xs transition-colors">
+                        <span class="material-symbols-outlined text-base">logout</span>
+                        <span class="hidden sm:inline">Abmelden</span>
                     </button>
                 </form>
             </div>
         </div>
-    </nav>
+    </header>
     <?php
 }
 
 function render_footer(): void {
     ?>
-    <footer class="border-t border-white/5 mt-16 py-8 text-center text-xs text-gray-600 font-mono">
-        Makumo HEMS &mdash; GridFlow OS
+    <footer class="mt-auto border-t border-outline-variant/30 bg-surface-container-lowest/60">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+                <div class="font-headline font-bold tracking-wider uppercase text-on-surface text-sm">Makumo HEMS</div>
+                <div class="font-label text-[11px] text-on-surface-variant mt-1">Private Installation · läuft lokal im Heimnetz</div>
+            </div>
+            <div class="inline-flex items-center gap-2 font-label text-[11px] text-secondary">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                Nur für angemeldete Nutzer
+            </div>
+        </div>
     </footer>
 </body>
 </html>
+    <?php
+}
+
+/**
+ * Einheitliche Hinweis-Karte (leer, Fehler, Info).
+ */
+function render_notice(string $icon, string $message, string $tone = 'muted'): void {
+    $icon_class = $tone === 'error' ? 'text-error' : 'text-on-surface-variant';
+    ?>
+    <div class="rounded-2xl bg-surface-container-lowest border border-outline-variant/40 p-10 text-center">
+        <div class="w-12 h-12 rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-2xl <?= $icon_class ?>"><?= htmlspecialchars($icon) ?></span>
+        </div>
+        <p class="text-on-surface-variant text-sm"><?= htmlspecialchars($message) ?></p>
+    </div>
     <?php
 }

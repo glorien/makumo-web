@@ -36,70 +36,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 render_head('Anmelden');
 ?>
-<div class="min-h-screen flex flex-col items-center justify-center px-4">
+<main class="flex-1 flex flex-col items-center justify-center px-4 py-16">
 
     <div class="w-full max-w-sm">
 
-        <div class="flex flex-col items-center mb-8">
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
-                <svg class="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-            </div>
-            <h1 class="font-display text-2xl font-semibold text-white">Makumo HEMS</h1>
-            <p class="text-sm text-gray-500 mt-1">APK Downloads</p>
+        <div class="flex flex-col items-center mb-8 text-center">
+            <img src="/assets/logo.svg" alt="" class="w-24 h-auto drop-shadow-lg mb-5">
+            <h1 class="font-headline text-4xl font-light tracking-[-0.01em] text-on-surface">
+                Makumo <span class="bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>
+            </h1>
+            <p class="font-label text-[11px] tracking-widest uppercase text-on-surface-variant mt-2">Private APK-Downloads</p>
         </div>
 
-        <div class="glass-card rounded-2xl p-8">
+        <div class="rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/40 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
 
             <?php if ($error !== ''): ?>
-                <div class="mb-6 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-                    <?= htmlspecialchars($error) ?>
+                <div class="mb-6 px-4 py-3 rounded-xl bg-error-container/30 border border-error/30 text-error text-sm flex items-start gap-2">
+                    <span class="material-symbols-outlined text-base mt-0.5">error</span>
+                    <span><?= htmlspecialchars($error) ?></span>
                 </div>
             <?php endif; ?>
 
             <form method="POST" action="/login.php" novalidate>
                 <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                 <div class="mb-5">
-                    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">E-Mail</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        autocomplete="email"
-                        required
-                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                        class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600
-                               focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50
-                               transition-colors font-mono text-sm"
-                        placeholder="name@example.com"
-                    >
+                    <label for="email" class="block font-label text-[11px] tracking-widest uppercase text-on-surface-variant mb-2">E-Mail</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined text-lg text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">mail</span>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            autocomplete="email"
+                            required
+                            value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                            class="w-full min-h-[48px] pl-11 pr-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/50 text-on-surface placeholder-on-surface-variant/40
+                                   focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60
+                                   transition-colors font-label text-sm"
+                            placeholder="name@example.com"
+                        >
+                    </div>
                 </div>
 
                 <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Passwort</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        autocomplete="current-password"
-                        required
-                        class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600
-                               focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50
-                               transition-colors font-mono text-sm"
-                        placeholder="••••••••"
-                    >
+                    <label for="password" class="block font-label text-[11px] tracking-widest uppercase text-on-surface-variant mb-2">Passwort</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined text-lg text-on-surface-variant absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">lock</span>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            autocomplete="current-password"
+                            required
+                            class="w-full min-h-[48px] pl-11 pr-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/50 text-on-surface placeholder-on-surface-variant/40
+                                   focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60
+                                   transition-colors font-label text-sm"
+                            placeholder="••••••••"
+                        >
+                    </div>
                 </div>
 
                 <button
                     type="submit"
-                    class="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600
-                           text-black font-display font-semibold text-sm transition-colors"
+                    class="w-full min-h-[48px] py-3 px-4 rounded-xl bg-primary hover:bg-primary-fixed text-on-primary
+                           font-headline font-semibold text-sm tracking-wide shadow-lg shadow-primary/20 transition-colors"
                 >
                     Anmelden
                 </button>
             </form>
         </div>
     </div>
-</div>
+</main>
 <?php render_footer(); ?>
