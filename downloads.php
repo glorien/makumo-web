@@ -113,7 +113,7 @@ function version_label(array $release): string {
 }
 
 render_head('Downloads');
-render_nav();
+render_nav($latest !== null);
 ?>
 
 <main class="w-full max-w-6xl mx-auto px-4 sm:px-6 pb-16">
@@ -143,10 +143,7 @@ render_nav();
             <span class="text-on-surface">v<?= htmlspecialchars(version_label($latest)) ?></span>
         </div>
 
-        <h1 class="font-headline font-light tracking-[-0.01em] leading-[1.05] mt-6 text-5xl sm:text-7xl">
-            <span class="text-on-surface">Makumo</span>
-            <span class="bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>
-        </h1>
+        <h1 id="page-title" class="leading-[1.05] mt-6 text-5xl sm:text-7xl"><?= wordmark() ?></h1>
         <p class="max-w-xl mx-auto mt-5 text-on-surface-variant text-base sm:text-lg leading-relaxed">
             Die Apps für das Energiemanagement zu Hause: der Server für das Wand-Tablet und das Dashboard fürs Smartphone. Alles läuft lokal im Heimnetz.
         </p>
@@ -182,7 +179,7 @@ render_nav();
             </div>
             <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant/40 font-label text-[11px] text-on-surface-variant">
                 <span class="material-symbols-outlined text-sm text-secondary">verified</span>
-                Signiert mit dem Makumo-Schlüssel
+                Signiert mit dem makumo-Schlüssel
             </div>
         </div>
 
@@ -340,5 +337,27 @@ render_nav();
 <?php endif; ?>
 
 </main>
+
+<script>
+// Show the header name only once the page title has scrolled behind the header,
+// so the name is not shown twice right below each other
+(() => {
+    const title = document.getElementById('page-title');
+    const brand = document.querySelector('.js-reveal-brand');
+    if (!title || !brand || !('IntersectionObserver' in window)) return;
+
+    const header = brand.closest('header');
+    const setHidden = (hidden) => {
+        brand.classList.toggle('opacity-0', hidden);
+        brand.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+    };
+    setHidden(true);
+
+    new IntersectionObserver(([entry]) => {
+        // Visible title, or title still below the header: keep the header name hidden
+        setHidden(entry.isIntersecting || entry.boundingClientRect.top > 0);
+    }, { rootMargin: `-${header.offsetHeight}px 0px 0px 0px` }).observe(title);
+})();
+</script>
 
 <?php render_footer(); ?>

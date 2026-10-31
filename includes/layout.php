@@ -10,8 +10,18 @@ function asset_url(string $path): string {
     return $mtime ? "$path?v=$mtime" : $path;
 }
 
-function render_head(string $title = 'Makumo HEMS'): void {
-    $full_title = $title === 'Makumo HEMS' ? $title : "$title — Makumo HEMS";
+// App name as the app writes it (KioskHeader.kt): lowercase "makumo" in primary amber, Light.
+// "HEMS" additionally gets the amber → green → cyan gradient of the portal.
+const APP_NAME = 'makumo HEMS';
+
+function wordmark(string $classes = ''): string {
+    return '<span class="font-headline font-light tracking-[-0.01em] text-primary whitespace-nowrap ' . $classes . '">'
+        . 'makumo <span class="bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>'
+        . '</span>';
+}
+
+function render_head(string $title = APP_NAME): void {
+    $full_title = $title === APP_NAME ? $title : "$title — " . APP_NAME;
     ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -37,7 +47,9 @@ function render_head(string $title = 'Makumo HEMS'): void {
     <?php
 }
 
-function render_nav(): void {
+// $reveal_brand: the page shows the name as its own title (element #page-title), so the header
+// name only fades in once that title has scrolled behind the header
+function render_nav(bool $reveal_brand = false): void {
     $user = current_user();
     if (!$user) return;
     ?>
@@ -45,9 +57,7 @@ function render_nav(): void {
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
             <a href="/downloads.php" class="flex items-center gap-3 min-w-0">
                 <img src="/assets/logo.svg" alt="" class="w-10 h-auto drop-shadow-md">
-                <span class="font-headline text-lg font-light tracking-wider uppercase text-on-surface whitespace-nowrap">
-                    Makumo <span class="font-normal bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>
-                </span>
+                <?= wordmark('text-xl sm:text-2xl transition-opacity duration-300' . ($reveal_brand ? ' js-reveal-brand' : '')) ?>
             </a>
             <div class="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span class="hidden sm:block font-label text-xs text-on-surface-variant truncate"><?= htmlspecialchars($user['email']) ?></span>
@@ -81,7 +91,7 @@ function render_footer(bool $show_footer = true): void {
     <footer class="mt-auto border-t border-outline-variant/30 bg-surface-container-lowest/60">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div>
-                <div class="font-headline font-bold tracking-wider uppercase text-on-surface text-sm">Makumo HEMS</div>
+                <div class="text-lg"><?= wordmark() ?></div>
                 <div class="font-label text-[11px] text-on-surface-variant mt-1">Private Installation · läuft lokal im Heimnetz</div>
             </div>
             <div class="inline-flex items-center gap-2 font-label text-[11px] text-secondary">
