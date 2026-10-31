@@ -2,6 +2,7 @@
 // Kopiere diese Datei als users.php und fülle die Werte aus.
 // users.php ist gitignored und wird NICHT deployed — einmalig per FTP auf den Server laden.
 // Passwort-Hashes generieren mit: php scripts/create-user.php "MeinPasswort"
+// 'admin' => true erlaubt die Nutzerverwaltung (admin.php). Eingeladene Nutzer landen in config/users.json.
 
 return [
     [
@@ -9,6 +10,7 @@ return [
         'email'         => 'user@example.com',
         'name'          => 'Vorname Name',
         'password_hash' => '$2y$10$BEISPIEL_HASH_HIER_ERSETZEN',
+        'admin'         => true,
     ],
     // Weitere Nutzer hier einfügen...
 ];

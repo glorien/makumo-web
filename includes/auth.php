@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__ . '/users.php';
 
 function start_session(): void {
     if (session_status() === PHP_SESSION_NONE) {
@@ -16,8 +17,27 @@ function start_session(): void {
 
 function require_login(): void {
     start_session();
-    if (empty($_SESSION['user_id'])) {
+    // Gelöschte Nutzer verlieren auch eine noch offene Sitzung
+    if (empty($_SESSION['user_id']) || find_user_by_id((string) $_SESSION['user_id']) === null) {
+        $_SESSION = [];
         header('Location: /login.php');
+        exit;
+    }
+}
+
+function is_admin(): bool {
+    start_session();
+    if (empty($_SESSION['user_id'])) {
+        return false;
+    }
+    $user = find_user_by_id((string) $_SESSION['user_id']);
+    return $user !== null && $user['source'] === 'static' && !empty($user['admin']);
+}
+
+function require_admin(): void {
+    require_login();
+    if (!is_admin()) {
+        header('Location: /downloads.php');
         exit;
     }
 }
@@ -35,29 +55,24 @@ function current_user(): ?array {
 }
 
 function attempt_login(string $email, string $password): bool {
-    $config_path = __DIR__ . '/../config/users.php';
-    if (!file_exists($config_path)) {
+    $user = find_user_by_email($email);
+    // Eingeladene Nutzer ohne gesetztes Passwort können sich noch nicht anmelden
+    if ($user === null || !is_string($user['password_hash'] ?? null)) {
         return false;
     }
-
-    $users = require $config_path;
-    $email = strtolower(trim($email));
-
-    foreach ($users as $user) {
-        if (strtolower($user['email']) === $email) {
-            if (password_verify($password, $user['password_hash'])) {
-                start_session();
-                session_regenerate_id(true);
-                $_SESSION['user_id']    = $user['id'];
-                $_SESSION['user_name']  = $user['name'];
-                $_SESSION['user_email'] = $user['email'];
-                return true;
-            }
-            return false;
-        }
+    if (!password_verify($password, $user['password_hash'])) {
+        return false;
     }
+    log_in_user($user);
+    return true;
+}
 
-    return false;
+function log_in_user(array $user): void {
+    start_session();
+    session_regenerate_id(true);
+    $_SESSION['user_id']    = (string) $user['id'];
+    $_SESSION['user_name']  = $user['name'];
+    $_SESSION['user_email'] = $user['email'];
 }
 
 function logout(): void {

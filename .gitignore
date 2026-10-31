@@ -1,5 +1,6 @@
 config/env.php
 config/users.php
+config/users.json
 cache/
 logs/
 *.log
