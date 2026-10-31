@@ -37,9 +37,7 @@ render_head('Passwort festlegen');
 
         <div class="flex flex-col items-center mb-6 sm:mb-8 text-center">
             <img src="/assets/logo.svg" alt="" class="w-20 sm:w-24 h-auto drop-shadow-lg mb-4 sm:mb-5">
-            <h1 class="font-headline text-4xl font-light tracking-[-0.01em] text-on-surface">
-                Makumo <span class="bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">HEMS</span>
-            </h1>
+            <h1 class="text-4xl"><?= wordmark() ?></h1>
             <p class="font-label text-[11px] tracking-widest uppercase text-on-surface-variant mt-2">Passwort festlegen</p>
         </div>
 
