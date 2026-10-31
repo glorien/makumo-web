@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $link      = invite_url(create_invited_user((string) ($_POST['email'] ?? ''), $name));
             $link_name = $name;
         } elseif ($target === null || $target['source'] !== 'managed') {
-            // Feste Nutzer aus users.php lassen sich hier nicht ändern
+            // Fixed users from users.php cannot be changed here
             $error = 'Nutzer nicht gefunden.';
         } elseif ($action === 'renew') {
             $link      = invite_url(renew_invite($id));
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $users = all_users();
 
-// Status eines Nutzers für die Liste: [Text, Icon, Textfarbe]
+// A user's status for the list: [text, icon, text colour]
 function user_status(array $user): array {
     $invite = $user['invite'] ?? null;
     if (is_array($invite)) {

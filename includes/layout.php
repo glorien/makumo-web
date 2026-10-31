@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-// Material-Symbols-Icons, die die Seiten verwenden (alphabetisch, sonst lehnt Google Fonts ab)
+// Material Symbols icons used by the pages (alphabetical, otherwise Google Fonts rejects the request)
 const ICON_NAMES = 'android,arrow_back,check_circle,content_copy,delete,download,error,group,history,install_mobile,inventory_2,link,lock,logout,mail,person,person_add,schedule,settings,smartphone,tablet_android,verified,wifi';
 
-// Hängt das Änderungsdatum an, damit Browser nach einem Deploy nicht das alte CSS aus dem Cache nehmen
+// Appends the modification time so browsers do not use cached CSS after a deploy
 function asset_url(string $path): string {
     $mtime = @filemtime(__DIR__ . '/..' . $path);
     return $mtime ? "$path?v=$mtime" : $path;
@@ -74,7 +74,7 @@ function render_nav(): void {
     <?php
 }
 
-// $show_footer = false: nur die schließenden Tags (Login-Seite, damit sie auf einen Handy-Bildschirm passt)
+// $show_footer = false: closing tags only (login page, so it fits on a phone screen)
 function render_footer(bool $show_footer = true): void {
     if ($show_footer):
     ?>
@@ -97,7 +97,7 @@ function render_footer(bool $show_footer = true): void {
 }
 
 /**
- * Einheitliche Hinweis-Karte (leer, Fehler, Info).
+ * Shared notice card (empty, error, info).
  */
 function render_notice(string $icon, string $message, string $tone = 'muted'): void {
     $icon_class = $tone === 'error' ? 'text-error' : 'text-on-surface-variant';

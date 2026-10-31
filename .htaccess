@@ -1,20 +1,20 @@
-# Verweigere direkten Zugriff auf sensible Verzeichnisse
-# (<DirectoryMatch> ist in .htaccess nicht erlaubt, daher mod_alias)
+# Deny direct access to sensitive directories
+# (<DirectoryMatch> is not allowed in .htaccess, hence mod_alias)
 RedirectMatch 404 ^/(config|cache|includes|scripts|logs)(/|$)
 
-# PHP-Fehler nicht im Browser anzeigen
+# Do not show PHP errors in the browser
 <IfModule mod_php.c>
     php_flag display_errors Off
     php_flag log_errors On
 </IfModule>
 
-# Verweigere Zugriff auf .example-Dateien
+# Deny access to .example files
 <FilesMatch "\.example$">
     Require all denied
 </FilesMatch>
 
-# Kein Directory Listing
+# No directory listing
 Options -Indexes
 
-# Zeichensatz
+# Character set
 AddDefaultCharset UTF-8
