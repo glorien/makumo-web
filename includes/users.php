@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-// Zwei Nutzerquellen:
-// - config/users.php: feste Nutzer, nur per FTP änderbar. Nur hier kann jemand Admin sein ('admin' => true).
-// - config/users.json: über die Admin-Seite eingeladene Nutzer, vom Webserver beschreibbar.
+// Two user sources:
+// - config/users.php: fixed users, changed via FTP only. Only these can be admins ('admin' => true).
+// - config/users.json: users invited on the admin page, writable by the web server.
 
 const INVITE_LIFETIME    = 172800; // 48 hours
 const PASSWORD_MIN_BYTES = 8;
-const PASSWORD_MAX_BYTES = 72;     // bcrypt ignoriert alles danach
+const PASSWORD_MAX_BYTES = 72;     // bcrypt ignores anything beyond
 
 function users_json_file(): string {
     return __DIR__ . '/../config/users.json';
@@ -31,14 +31,14 @@ function managed_users(): array {
     return is_array($data) ? $data : [];
 }
 
-// Alle Nutzer, jeweils mit 'source' => 'static' oder 'managed'
+// All users, each with 'source' => 'static' or 'managed'
 function all_users(): array {
     $users = [];
     foreach (static_users() as $user) {
         $users[] = $user + ['source' => 'static', 'admin' => false];
     }
     foreach (managed_users() as $user) {
-        // Admin-Rechte gibt es nur aus users.php, nie aus der beschreibbaren Datei
+        // Admin rights only come from users.php, never from the writable file
         $users[] = ['source' => 'managed', 'admin' => false] + $user;
     }
     return $users;
@@ -68,8 +68,8 @@ function users_store_writable(): bool {
     return file_exists($file) ? is_writable($file) : is_writable(dirname($file));
 }
 
-// Liest users.json unter exklusiver Sperre, übergibt die Liste an $fn und schreibt das Ergebnis zurück.
-// $fn bekommt die Liste per Referenz und darf einen beliebigen Rückgabewert liefern.
+// Reads users.json under an exclusive lock, passes the list to $fn and writes the result back.
+// $fn receives the list by reference and may return any value.
 function update_managed_users(callable $fn): mixed {
     $handle = fopen(users_json_file(), 'c+');
     if ($handle === false) {
@@ -98,7 +98,7 @@ function new_invite(): array {
     return [$token, ['hash' => hash('sha256', $token), 'expires' => time() + INVITE_LIFETIME]];
 }
 
-// Legt einen Nutzer ohne Passwort an und gibt den Einladungs-Token zurück
+// Creates a user without a password and returns the invitation token
 function create_invited_user(string $email, string $name): string {
     $email = strtolower(trim($email));
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -126,7 +126,7 @@ function create_invited_user(string $email, string $name): string {
     return $token;
 }
 
-// Neuer Link für einen eingeladenen Nutzer (abgelaufene Einladung oder Passwort vergessen)
+// New link for an invited user (expired invitation or forgotten password)
 function renew_invite(string $id): string {
     [$token, $invite] = new_invite();
     $found = update_managed_users(function (array &$users) use ($id, $invite) {
@@ -150,7 +150,7 @@ function delete_managed_user(string $id): void {
     });
 }
 
-// Nutzer zu einem gültigen, nicht abgelaufenen Token, sonst null
+// User for a valid, unexpired token, otherwise null
 function find_user_by_invite(string $token): ?array {
     if ($token === '') {
         return null;
@@ -178,7 +178,7 @@ function validate_new_password(string $password, string $confirm): ?string {
     return null;
 }
 
-// Setzt das Passwort und verbraucht den Token. Gibt den Nutzer zurück oder null, wenn der Token nicht (mehr) gilt.
+// Sets the password and consumes the token. Returns the user, or null if the token is not (or no longer) valid.
 function accept_invite(string $token, string $password): ?array {
     $hash          = hash('sha256', $token);
     $password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
@@ -196,7 +196,7 @@ function accept_invite(string $token, string $password): ?array {
     });
 }
 
-// Basis-URL für Einladungslinks (Schema und Host der aktuellen Anfrage)
+// Invitation link URL (scheme and host of the current request)
 function invite_url(string $token): string {
     $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
     $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';

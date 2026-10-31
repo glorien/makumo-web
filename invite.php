@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/layout.php';
 
-// Der Token steht in der URL: nicht als Referrer an andere Seiten weitergeben
+// The token is in the URL: do not pass it on to other sites as referrer
 header('Referrer-Policy: no-referrer');
 
 start_session();
@@ -66,7 +66,7 @@ render_head('Passwort festlegen');
                 <form method="POST" action="/invite.php" novalidate>
                     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                     <input type="hidden" name="t" value="<?= htmlspecialchars($token) ?>">
-                    <!-- Für Passwort-Manager: zum neuen Passwort gehört dieser Benutzername -->
+                    <!-- For password managers: the username that belongs to the new password -->
                     <input type="email" name="username" value="<?= htmlspecialchars($user['email']) ?>" autocomplete="username" class="hidden" readonly tabindex="-1">
 
                     <div class="mb-5">

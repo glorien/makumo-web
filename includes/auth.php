@@ -17,7 +17,7 @@ function start_session(): void {
 
 function require_login(): void {
     start_session();
-    // Gelöschte Nutzer verlieren auch eine noch offene Sitzung
+    // Deleted users also lose any session that is still open
     if (empty($_SESSION['user_id']) || find_user_by_id((string) $_SESSION['user_id']) === null) {
         $_SESSION = [];
         header('Location: /login.php');
@@ -56,7 +56,7 @@ function current_user(): ?array {
 
 function attempt_login(string $email, string $password): bool {
     $user = find_user_by_email($email);
-    // Eingeladene Nutzer ohne gesetztes Passwort können sich noch nicht anmelden
+    // Invited users who have not set a password yet cannot sign in
     if ($user === null || !is_string($user['password_hash'] ?? null)) {
         return false;
     }
@@ -97,7 +97,7 @@ function verify_csrf(): bool {
         && hash_equals($_SESSION['csrf'], $token);
 }
 
-// Login-Sperre: max. LOGIN_MAX_ATTEMPTS Fehlversuche pro IP in LOGIN_WINDOW Sekunden
+// Login lock: at most LOGIN_MAX_ATTEMPTS failed attempts per IP within LOGIN_WINDOW seconds
 const LOGIN_MAX_ATTEMPTS = 5;
 const LOGIN_WINDOW       = 900; // 15 minutes
 
@@ -119,7 +119,7 @@ function read_login_attempts(): array {
     return $data;
 }
 
-// Verbleibende Sperrzeit in Sekunden, 0 wenn nicht gesperrt
+// Remaining lock time in seconds, 0 if not locked
 function login_lockout_remaining(): int {
     $data = read_login_attempts();
     if ($data['count'] < LOGIN_MAX_ATTEMPTS) {

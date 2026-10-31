@@ -21,8 +21,8 @@ function github_repo_path(): ?string {
 }
 
 /**
- * Führt einen GET-Request gegen die GitHub-API aus.
- * Gibt Status, Body und (bei Redirects) die Location zurück.
+ * Sends a GET request to the GitHub API.
+ * Returns status, body and (for redirects) the Location.
  */
 function github_request(string $path, string $accept = 'application/vnd.github+json', bool $follow = true): array {
     load_env();
@@ -53,9 +53,9 @@ function github_request(string $path, string $accept = 'application/vnd.github+j
 }
 
 /**
- * Lädt die Releases (5 Minuten gecacht).
- * Bei API-Fehlern wird ein abgelaufener Cache weiterverwendet.
- * Rückgabe: ['releases' => array, 'error' => bool]
+ * Loads the releases (cached for 5 minutes).
+ * On API errors an expired cache is used instead.
+ * Returns: ['releases' => array, 'error' => bool]
  */
 function fetch_releases(): array {
     $repo_path = github_repo_path();
@@ -100,7 +100,7 @@ function fetch_releases(): array {
                     'name'           => $asset['name'],
                     'size'           => $asset['size'],
                     'download_count' => $asset['download_count'],
-                    'digest'         => $asset['digest'] ?? null, // z. B. "sha256:…"
+                    'digest'         => $asset['digest'] ?? null, // e.g. "sha256:…"
                 ];
             }
         }
@@ -135,8 +135,8 @@ function fetch_releases(): array {
 }
 
 /**
- * Sucht ein APK-Asset in den angezeigten Releases.
- * Nur Assets aus dieser Liste dürfen heruntergeladen werden.
+ * Finds an APK asset in the listed releases.
+ * Only assets from this list may be downloaded.
  */
 function find_asset(int $id): ?array {
     foreach (fetch_releases()['releases'] as $release) {
@@ -150,7 +150,7 @@ function find_asset(int $id): ?array {
 }
 
 /**
- * Liefert die kurzlebige, signierte Download-URL eines Release-Assets.
+ * Returns the short-lived, signed download URL of a release asset.
  */
 function asset_download_url(int $id): ?string {
     $repo_path = github_repo_path();
