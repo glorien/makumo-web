@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 // Material-Symbols-Icons, die die Seiten verwenden (alphabetisch, sonst lehnt Google Fonts ab)
-const ICON_NAMES = 'android,arrow_back,check_circle,download,error,history,install_mobile,inventory_2,lock,logout,mail,settings,smartphone,tablet_android,verified,wifi';
+const ICON_NAMES = 'android,arrow_back,check_circle,content_copy,delete,download,error,group,history,install_mobile,inventory_2,link,lock,logout,mail,person,person_add,schedule,settings,smartphone,tablet_android,verified,wifi';
 
 // Hängt das Änderungsdatum an, damit Browser nach einem Deploy nicht das alte CSS aus dem Cache nehmen
 function asset_url(string $path): string {
@@ -51,6 +51,14 @@ function render_nav(): void {
             </a>
             <div class="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span class="hidden sm:block font-label text-xs text-on-surface-variant truncate"><?= htmlspecialchars($user['email']) ?></span>
+                <?php if (is_admin()): ?>
+                    <a href="/admin.php"
+                       class="inline-flex items-center gap-2 px-3 py-2 min-h-[44px] rounded-lg bg-surface-container-high/60 border border-outline-variant/40
+                              text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest font-label text-xs transition-colors">
+                        <span class="material-symbols-outlined text-base">group</span>
+                        <span class="hidden sm:inline">Nutzer</span>
+                    </a>
+                <?php endif; ?>
                 <form method="POST" action="/logout.php">
                     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                     <button type="submit"

@@ -4,7 +4,8 @@ A small PHP portal with login where signed-in users can download the Android APK
 
 ## How it works
 
-- **Login** uses sessions and bcrypt password hashes. Users are defined in `config/users.php`; there is no database.
+- **Login** uses sessions and bcrypt password hashes. There is no database: fixed users live in `config/users.php` (uploaded by hand), invited users in `config/users.json` (written by the portal).
+- **User management:** Admins (users in `config/users.php` with `'admin' => true`) see a "Nutzer" button that opens `admin.php`. There they invite a user by name and email. The portal shows a one-time link (`invite.php?t=…`, valid for 48 hours) that the admin sends on themselves, e.g. by messenger; no email is sent. The invitee sets their own password via the link and is signed in. Only a SHA-256 hash of the token is stored. "Neuer Link" issues a fresh link for an invited user (expired invitation or forgotten password; the old password keeps working until the new one is set). "Löschen" removes an invited user and ends their open sessions. Fixed users from `config/users.php` cannot be changed on this page, and admin rights can only come from that file.
 - **Login protection:** CSRF tokens on login and logout (logout is POST only). After 5 failed attempts from one IP, login is blocked for 15 minutes (`cache/login_attempts/`).
 - **Releases** are fetched from the GitHub API (`/repos/{owner}/{repo}/releases`). Only published releases (no drafts) with at least one `.apk` asset are shown, along with the first 5 lines of the changelog and the GitHub download count.
 - **Cache:** The API response is stored in `cache/releases-v3.json` for 5 minutes. If the API fails, the expired cache is used instead.
@@ -18,9 +19,12 @@ A small PHP portal with login where signed-in users can download the Android APK
 |---|---|
 | `index.php` | Redirects to `downloads.php` or `login.php` depending on login state |
 | `login.php` / `logout.php` | Sign in and sign out |
+| `admin.php` | User management for admins: invite, new link, delete |
+| `invite.php` | Invitation link target: invitee sets their password |
 | `downloads.php` | List of releases with APK download buttons |
 | `download.php` | Download proxy: checks login, logs and redirects to GitHub |
-| `includes/auth.php` | Session handling, login, logout |
+| `includes/auth.php` | Session handling, login, logout, admin check |
+| `includes/users.php` | User store (`config/users.php` + `config/users.json`), invitation tokens |
 | `includes/github.php` | GitHub API requests, cache, signed download URLs, formatting |
 | `includes/layout.php` | HTML head, navigation, footer |
 | `assets/tailwind.css` | Prebuilt Tailwind CSS (generated, do not edit) |
@@ -35,12 +39,12 @@ A small PHP portal with login where signed-in users can download the Android APK
 
 - PHP 8.0+ with the `curl` extension
 - Apache with `.htaccess` enabled and mod_alias (returns 404 for `config/`, `cache/`, `includes/`, `scripts/`, `logs/`, and blocks `.example` files)
-- Write access for the web server in the project directory (for `cache/` and `logs/`)
+- Write access for the web server in the project directory (for `cache/`, `logs/` and `config/users.json`)
 - On hosts running PHP-FPM, the `php_flag` lines in `.htaccess` have no effect: turn off `display_errors` in the hosting control panel
 
 ## Configuration
 
-Both files are gitignored and are **not** deployed automatically. Upload them once by hand via FTP.
+Both files are gitignored and are **not** deployed automatically. Upload them once by hand via FTP. `config/users.json` is created by the portal itself; it is also gitignored and excluded from deployment, so pushes never overwrite it.
 
 1. **`config/env.php`** – copy from `config/env.php.example`:
    - `GITHUB_OWNER`, `GITHUB_REPO`: the repository whose releases are shown
@@ -52,7 +56,7 @@ Both files are gitignored and are **not** deployed automatically. Upload them on
    php scripts/create-user.php "MyPassword"
    ```
 
-   The password must be at least 8 characters long.
+   The password must be at least 8 characters long. Give at least one user `'admin' => true`; everyone else can then be invited through the portal instead of editing this file.
 
 ## Running locally
 
