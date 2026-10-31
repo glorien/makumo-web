@@ -55,21 +55,21 @@ function render_nav(bool $reveal_brand = false): void {
     ?>
     <header class="sticky top-0 z-50 bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/30">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-            <a href="/downloads.php" class="flex items-center gap-3 min-w-0">
+            <a href="/downloads" class="flex items-center gap-3 min-w-0">
                 <img src="/assets/logo.svg" alt="" class="w-10 h-auto drop-shadow-md">
                 <?= wordmark('text-xl sm:text-2xl transition-opacity duration-300' . ($reveal_brand ? ' js-reveal-brand' : '')) ?>
             </a>
             <div class="flex items-center gap-2 sm:gap-4 min-w-0">
                 <span class="hidden sm:block font-label text-xs text-on-surface-variant truncate"><?= htmlspecialchars($user['email']) ?></span>
                 <?php if (is_admin()): ?>
-                    <a href="/admin.php"
+                    <a href="/admin"
                        class="inline-flex items-center gap-2 px-3 py-2 min-h-[44px] rounded-lg bg-surface-container-high/60 border border-outline-variant/40
                               text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest font-label text-xs transition-colors">
                         <span class="material-symbols-outlined text-base">group</span>
                         <span class="hidden sm:inline">Nutzer</span>
                     </a>
                 <?php endif; ?>
-                <form method="POST" action="/logout.php">
+                <form method="POST" action="/logout">
                     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                     <button type="submit"
                             class="inline-flex items-center gap-2 px-3 py-2 min-h-[44px] rounded-lg bg-surface-container-high/60 border border-outline-variant/40

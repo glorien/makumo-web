@@ -5,8 +5,8 @@ require_once __DIR__ . '/includes/auth.php';
 start_session();
 
 if (!empty($_SESSION['user_id'])) {
-    header('Location: /downloads.php');
+    header('Location: /downloads');
 } else {
-    header('Location: /login.php');
+    header('Location: /login');
 }
 exit;

@@ -20,7 +20,7 @@ function require_login(): void {
     // Deleted users also lose any session that is still open
     if (empty($_SESSION['user_id']) || find_user_by_id((string) $_SESSION['user_id']) === null) {
         $_SESSION = [];
-        header('Location: /login.php');
+        header('Location: /login');
         exit;
     }
 }
@@ -37,7 +37,7 @@ function is_admin(): bool {
 function require_admin(): void {
     require_login();
     if (!is_admin()) {
-        header('Location: /downloads.php');
+        header('Location: /downloads');
         exit;
     }
 }

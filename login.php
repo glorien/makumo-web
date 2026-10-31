@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/layout.php';
 start_session();
 
 if (!empty($_SESSION['user_id'])) {
-    header('Location: /downloads.php');
+    header('Location: /downloads');
     exit;
 }
 
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Ungültige Anmeldedaten.';
     } else {
         clear_failed_logins();
-        header('Location: /downloads.php');
+        header('Location: /downloads');
         exit;
     }
 }
@@ -55,7 +55,7 @@ render_head('Anmelden');
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="/login.php" novalidate>
+            <form method="POST" action="/login" novalidate>
                 <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                 <div class="mb-5">
                     <label for="email" class="block font-label text-[11px] tracking-widest uppercase text-on-surface-variant mb-2">E-Mail</label>

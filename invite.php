@@ -22,7 +22,7 @@ if ($user !== null && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $accepted = accept_invite($token, $password);
         if ($accepted !== null) {
             log_in_user($accepted);
-            header('Location: /downloads.php');
+            header('Location: /downloads');
             exit;
         }
         $user = null;
@@ -44,7 +44,7 @@ render_head('Passwort festlegen');
         <?php if ($user === null): ?>
             <?php render_notice('error', 'Dieser Link ist ungültig, abgelaufen oder wurde schon verwendet. Bitte um einen neuen Link.', 'error'); ?>
             <p class="text-center mt-6">
-                <a href="/login.php" class="font-label text-xs text-on-surface-variant hover:text-on-surface transition-colors">Zur Anmeldung</a>
+                <a href="/login" class="font-label text-xs text-on-surface-variant hover:text-on-surface transition-colors">Zur Anmeldung</a>
             </p>
         <?php else: ?>
             <div class="rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/40 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
@@ -61,7 +61,7 @@ render_head('Passwort festlegen');
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="/invite.php" novalidate>
+                <form method="POST" action="/invite" novalidate>
                     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                     <input type="hidden" name="t" value="<?= htmlspecialchars($token) ?>">
                     <!-- For password managers: the username that belongs to the new password -->
