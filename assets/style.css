@@ -1,4 +1,4 @@
-/* Outfit wie in der App (statische Schnitte Light/Regular/Medium, SIL OFL 1.1) */
+/* Outfit as in the app (static cuts Light/Regular/Medium, SIL OFL 1.1) */
 @font-face {
     font-family: 'Outfit';
     src: url('/assets/fonts/outfit-light.ttf') format('truetype');
@@ -26,14 +26,14 @@
 }
 
 body {
-    /* Sichtbare Höhe: vh zählt auf Handys die Adressleiste mit, dvh nicht */
+    /* Visible height: on phones vh includes the address bar, dvh does not */
     min-height: 100vh;
     min-height: 100dvh;
     background-color: #190047;
     -webkit-font-smoothing: antialiased;
 }
 
-/* Hintergrund-Glows (Luminous Flux) */
+/* Background glows (Luminous Flux) */
 .ambient-glow {
     position: fixed;
     border-radius: 9999px;

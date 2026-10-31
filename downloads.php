@@ -9,7 +9,7 @@ require_login();
 $result   = fetch_releases();
 $releases = $result['releases'];
 
-// Neueste stabile Version oben, alles andere unter "Weitere Versionen"
+// Latest stable version on top, everything else under "Weitere Versionen"
 $latest = null;
 foreach ($releases as $release) {
     if (!$release['prerelease']) {
@@ -20,8 +20,8 @@ foreach ($releases as $release) {
 $latest ??= $releases[0] ?? null;
 $older = array_values(array_filter($releases, fn($r) => $r !== $latest));
 
-// Darstellung je App, erkannt am Dateinamen der APK.
-// Klassen stehen ausgeschrieben, damit Tailwind sie beim Build findet.
+// Presentation per app, detected from the APK file name.
+// Classes are written out in full so Tailwind finds them at build time.
 const VARIANTS = [
     'server' => [
         'kicker'   => 'Wand-Tablet · Server',
@@ -90,7 +90,7 @@ function asset_variant(array $asset): array {
     return $v;
 }
 
-// Server zuerst, dann Client, dann Rest
+// Server first, then client, then the rest
 function sort_assets(array $assets): array {
     $rank = fn($a) => match (true) {
         str_contains(strtolower($a['name']), 'server') => 0,
@@ -173,7 +173,7 @@ render_nav();
         </div>
     <?php endif; ?>
 
-    <!-- App-Karten -->
+    <!-- App cards -->
     <section>
         <div class="flex items-end justify-between gap-4 mb-5">
             <div>
@@ -291,7 +291,7 @@ render_nav();
         </p>
     </section>
 
-    <!-- Weitere Versionen (ältere und Pre-releases) -->
+    <!-- More versions (older releases and pre-releases) -->
     <?php if ($older): ?>
         <section class="mt-16 sm:mt-20">
             <div class="flex items-center gap-2 mb-5">

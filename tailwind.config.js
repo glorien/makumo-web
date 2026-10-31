@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-// Farben aus dem Design-System "Luminous Flux", Schrift wie das Outfit-Theme der App
-// (makumo App-Repo, ui-shared/.../theme/LuminousType.kt)
+// Colours from the "Luminous Flux" design system, type like the app's Outfit theme
+// (makumo app repository, ui-shared/.../theme/LuminousType.kt)
 module.exports = {
     content: ['./*.php', './includes/*.php'],
     theme: {
@@ -33,7 +33,7 @@ module.exports = {
                 label:    ['Outfit', 'sans-serif'],
             },
         },
-        // Wie LuminousType.w() im Outfit-Theme: nichts fetter als 500,
+        // Like LuminousType.w() in the Outfit theme: nothing heavier than 500,
         // Bold/SemiBold → Medium, Medium → Regular
         fontWeight: {
             light:    '300',

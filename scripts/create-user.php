@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
-// Verwendung: php scripts/create-user.php "MeinPasswort"
-// Gibt den bcrypt-Hash aus, der in config/users.php eingetragen werden kann.
+// Usage: php scripts/create-user.php "MyPassword"
+// Prints the bcrypt hash to put into config/users.php.
 
 if (PHP_SAPI !== 'cli') {
     exit('Nur via CLI ausführen.' . PHP_EOL);
