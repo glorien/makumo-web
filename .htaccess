@@ -13,8 +13,32 @@ RedirectMatch 404 ^/(config|cache|includes|scripts|logs)(/|$)
     Require all denied
 </FilesMatch>
 
-# No directory listing
-Options -Indexes
+# No directory listing; no MultiViews, so only the rules below map
+# extensionless URLs to PHP files
+Options -Indexes -MultiViews
+
+# Clean URLs without file extension (/login instead of /login.php)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Old URLs with extension get a permanent redirect (query string is kept).
+    # Root level only: all pages live there, and protected directories keep
+    # answering 404 directly.
+    # THE_REQUEST is the original request line, so the internal rewrite below
+    # does not loop back here. GET/HEAD only: a 301 would turn a POST into a GET.
+    RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+    RewriteCond %{THE_REQUEST} \s/+index\.php[\s?]
+    RewriteRule ^ / [R=301,L]
+
+    RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+    RewriteCond %{THE_REQUEST} \s/+([^/?\s]+)\.php[\s?]
+    RewriteRule ^ /%1 [R=301,NE,L]
+
+    # Extensionless URL -> matching PHP file, if it exists
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^([^/.]+)$ $1.php [L]
+</IfModule>
 
 # Character set
 AddDefaultCharset UTF-8

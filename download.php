@@ -14,7 +14,7 @@ function render_download_error(int $status, string $message): void {
 <main class="w-full max-w-xl mx-auto px-4 sm:px-6 py-16">
     <?php render_notice('error', $message, 'error'); ?>
     <div class="text-center mt-6">
-        <a href="/downloads.php" class="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-lg font-label text-xs text-primary hover:bg-surface-container-high/60 transition-colors">
+        <a href="/downloads" class="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-lg font-label text-xs text-primary hover:bg-surface-container-high/60 transition-colors">
             <span class="material-symbols-outlined text-base">arrow_back</span>
             Zurück zur Übersicht
         </a>

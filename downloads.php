@@ -229,7 +229,7 @@ render_nav($latest !== null);
                     <?php endif; ?>
 
                     <div class="relative mt-auto pt-6 border-t border-outline-variant/30">
-                        <a href="/download.php?id=<?= (int) $asset['id'] ?>"
+                        <a href="/download?id=<?= (int) $asset['id'] ?>"
                            class="w-full min-h-[48px] py-3.5 px-4 rounded-xl font-headline text-sm font-semibold tracking-wide flex items-center justify-center gap-2 shadow-lg transition-colors <?= $v['button'] ?>">
                             <span class="material-symbols-outlined text-lg">download</span>
                             APK herunterladen
@@ -312,7 +312,7 @@ render_nav($latest !== null);
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <?php foreach (sort_assets($release['assets']) as $asset): $v = asset_variant($asset); ?>
-                                    <a href="/download.php?id=<?= (int) $asset['id'] ?>"
+                                    <a href="/download?id=<?= (int) $asset['id'] ?>"
                                        title="<?= htmlspecialchars($asset['name']) ?>"
                                        class="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-lg border font-label text-xs transition-colors <?= $v['chip'] ?>">
                                         <span class="material-symbols-outlined text-base">download</span>

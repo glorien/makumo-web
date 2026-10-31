@@ -63,7 +63,7 @@ render_nav();
 <main class="w-full max-w-3xl mx-auto px-4 sm:px-6 pt-10 pb-16">
 
     <div class="mb-8">
-        <a href="/downloads.php" class="inline-flex items-center gap-1 font-label text-xs text-on-surface-variant hover:text-on-surface transition-colors">
+        <a href="/downloads" class="inline-flex items-center gap-1 font-label text-xs text-on-surface-variant hover:text-on-surface transition-colors">
             <span class="material-symbols-outlined text-base">arrow_back</span>
             Downloads
         </a>
@@ -117,7 +117,7 @@ render_nav();
 
     <section class="mb-10 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/40 p-5 sm:p-6">
         <h2 class="font-headline text-2xl font-light tracking-[-0.01em] text-on-surface mb-5">Nutzer einladen</h2>
-        <form method="POST" action="/admin.php" class="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end" novalidate>
+        <form method="POST" action="/admin" class="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end" novalidate>
             <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
             <input type="hidden" name="action" value="invite">
             <div>
@@ -172,7 +172,7 @@ render_nav();
                     </div>
                     <?php if ($user['source'] === 'managed'): ?>
                         <div class="flex gap-2">
-                            <form method="POST" action="/admin.php">
+                            <form method="POST" action="/admin">
                                 <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                                 <input type="hidden" name="action" value="renew">
                                 <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">
@@ -183,7 +183,7 @@ render_nav();
                                     Neuer Link
                                 </button>
                             </form>
-                            <form method="POST" action="/admin.php" onsubmit="return confirm(<?= htmlspecialchars(json_encode($user['name'] . ' wirklich löschen?', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE)) ?>);">
+                            <form method="POST" action="/admin" onsubmit="return confirm(<?= htmlspecialchars(json_encode($user['name'] . ' wirklich löschen?', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE)) ?>);">
                                 <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">

@@ -200,5 +200,5 @@ function accept_invite(string $token, string $password): ?array {
 function invite_url(string $token): string {
     $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
     $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    return "$scheme://$host/invite.php?t=" . urlencode($token);
+    return "$scheme://$host/invite?t=" . urlencode($token);
 }
