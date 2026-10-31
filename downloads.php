@@ -339,24 +339,39 @@ render_nav($latest !== null);
 </main>
 
 <script>
-// Show the header name only once the page title has scrolled behind the header,
-// so the name is not shown twice right below each other
+// Hand the name over from the page title to the header: once half of the title has
+// scrolled behind the header, the header name fades in; scrolling back reverses it.
+// A plain scroll check (instead of IntersectionObserver) also fires reliably during
+// momentum scrolling in mobile browsers.
 (() => {
     const title = document.getElementById('page-title');
     const brand = document.querySelector('.js-reveal-brand');
-    if (!title || !brand || !('IntersectionObserver' in window)) return;
+    if (!title || !brand) return;
 
     const header = brand.closest('header');
-    const setHidden = (hidden) => {
+    let hidden = null;
+    let queued = false;
+
+    const update = () => {
+        queued = false;
+        const t = title.getBoundingClientRect();
+        const shouldHide = t.top + t.height / 2 > header.getBoundingClientRect().bottom;
+        if (shouldHide === hidden) return;
+        hidden = shouldHide;
         brand.classList.toggle('opacity-0', hidden);
         brand.setAttribute('aria-hidden', hidden ? 'true' : 'false');
     };
-    setHidden(true);
+    const schedule = () => {
+        if (!queued) {
+            queued = true;
+            requestAnimationFrame(update);
+        }
+    };
 
-    new IntersectionObserver(([entry]) => {
-        // Visible title, or title still below the header: keep the header name hidden
-        setHidden(entry.isIntersecting || entry.boundingClientRect.top > 0);
-    }, { rootMargin: `-${header.offsetHeight}px 0px 0px 0px` }).observe(title);
+    update();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('pageshow', update); // back/forward cache restores the scroll position
 })();
 </script>
 
