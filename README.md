@@ -94,4 +94,4 @@ Required repository secrets:
 ## Known limitations
 
 - The login lock is per IP address. Users behind the same IP (e.g. an office network) share one counter.
-- Download counts come from GitHub and can be up to 5 minutes old because of the cache.
+- Download counts: the higher of GitHub's counter and the number of entries in `logs/downloads.log` per tag and file (GitHub does not reliably count downloads through the signed API URL). GitHub's part can be up to 5 minutes old because of the cache. Downloads before the log existed are not counted locally.

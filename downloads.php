@@ -9,6 +9,16 @@ require_login();
 $result   = fetch_releases();
 $releases = $result['releases'];
 
+// Merge in the portal's own download log (GitHub's counter misses API downloads)
+$local_counts = local_download_counts();
+foreach ($releases as &$rel) {
+    foreach ($rel['assets'] as &$a) {
+        $a['download_count'] = effective_download_count($a, $rel['tag'], $local_counts);
+    }
+    unset($a);
+}
+unset($rel);
+
 // Latest stable version on top, everything else under "Weitere Versionen"
 $latest = null;
 foreach ($releases as $release) {
