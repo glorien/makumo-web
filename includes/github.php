@@ -170,6 +170,38 @@ function asset_download_url(int $id): ?string {
     return $response['location'];
 }
 
+/**
+ * Counts downloads per "tag|file name" from the portal's own download log.
+ * GitHub does not reliably count downloads made through the signed API URL,
+ * so its download_count can stay at 0 although files were downloaded.
+ */
+function local_download_counts(): array {
+    $file = __DIR__ . '/../logs/downloads.log';
+    $counts = [];
+    $handle = is_readable($file) ? fopen($file, 'r') : false;
+    if ($handle === false) {
+        return $counts;
+    }
+    while (($line = fgets($handle)) !== false) {
+        $cols = explode("\t", rtrim($line, "\r\n"));
+        if (count($cols) < 4) {
+            continue;
+        }
+        $key = $cols[2] . '|' . $cols[3];
+        $counts[$key] = ($counts[$key] ?? 0) + 1;
+    }
+    fclose($handle);
+    return $counts;
+}
+
+/**
+ * Download count to display: the higher of GitHub's and the local count
+ * (never the sum, in case GitHub counts the same download as well).
+ */
+function effective_download_count(array $asset, string $tag, array $local): int {
+    return max((int) $asset['download_count'], $local[$tag . '|' . $asset['name']] ?? 0);
+}
+
 function format_bytes(int $bytes): string {
     if ($bytes >= 1_048_576) {
         return round($bytes / 1_048_576, 1) . ' MB';
