@@ -41,9 +41,7 @@ function render_head(string $title = APP_NAME): void {
     <link rel="stylesheet" href="<?= asset_url('/assets/style.css') ?>">
 </head>
 <body class="bg-background text-on-surface font-sans flex flex-col overflow-x-hidden selection:bg-primary selection:text-on-primary">
-    <div class="ambient-glow top-0 left-1/4 w-[600px] h-[600px] bg-primary/10 blur-[140px]"></div>
-    <div class="ambient-glow top-1/3 right-10 w-[500px] h-[500px] bg-tertiary/10 blur-[160px]"></div>
-    <div class="ambient-glow bottom-10 left-1/3 w-[700px] h-[700px] bg-surface-container-high/40 blur-[180px]"></div>
+    <div class="ambient-mesh" aria-hidden="true"></div>
     <?php
 }
 

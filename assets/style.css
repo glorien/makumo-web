@@ -33,12 +33,42 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Background glows (Luminous Flux) */
-.ambient-glow {
+/* Ambient mesh background, static port of the app's AmbientMesh.kt (ui-shared, makumo repo).
+   All colours and the darkening overlay are tunable here. Glow radii are factors of the
+   box diagonal. A fixed layer instead of background-attachment: fixed, which iOS Safari ignores. */
+:root {
+    --mesh-base-0: rgb(12, 0, 36);
+    --mesh-base-1: rgb(25, 0, 71);
+    --mesh-base-2: rgb(19, 0, 58);
+    --mesh-cyan: rgba(34, 211, 238, 0.45);
+    --mesh-teal: rgba(6, 182, 212, 0.30);
+    --mesh-indigo: rgba(99, 102, 241, 0.28);
+    --mesh-magenta: rgba(217, 70, 239, 0.30);
+    --mesh-violet: rgba(67, 24, 140, 0.40);
+    /* Black overlay, the website's slightly darker take on the app (app: 0) */
+    --mesh-dim: 0.30;
+    /* Fallback: the diagonal lies between 1x and 1.414x of the longer side */
+    --mesh-diag: 120vmax;
+}
+@supports (width: calc(hypot(3px, 4px))) {
+    :root {
+        --mesh-diag: calc(hypot(100vw, 100vh));
+    }
+}
+
+.ambient-mesh {
     position: fixed;
-    border-radius: 9999px;
-    pointer-events: none;
+    inset: 0;
     z-index: -10;
+    pointer-events: none;
+    background:
+        linear-gradient(rgba(0, 0, 0, var(--mesh-dim)), rgba(0, 0, 0, var(--mesh-dim))),
+        radial-gradient(circle calc(0.35 * var(--mesh-diag)) at 50% 65%, var(--mesh-violet), transparent),
+        radial-gradient(circle calc(0.45 * var(--mesh-diag)) at 85% 80%, var(--mesh-magenta), transparent),
+        radial-gradient(circle calc(0.35 * var(--mesh-diag)) at 70% 30%, var(--mesh-indigo), transparent),
+        radial-gradient(circle calc(0.40 * var(--mesh-diag)) at 35% 25%, var(--mesh-teal), transparent),
+        radial-gradient(circle calc(0.38 * var(--mesh-diag)) at 15% 15%, var(--mesh-cyan), transparent),
+        linear-gradient(to bottom right, var(--mesh-base-0) 0%, var(--mesh-base-1) 50%, var(--mesh-base-2) 100%);
 }
 
 .material-symbols-outlined {
